@@ -69,6 +69,7 @@ const SignUp = () => {
 
         // Create User
         if (name.value && email.value && password.value && confirmPassword.value) {
+            console.log(email.value, password.value);
             createUserWithEmailAndPassword(email.value, password.value);
         }
 
