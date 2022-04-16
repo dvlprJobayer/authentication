@@ -10,10 +10,10 @@ import Loading from '../Loading/Loading';
 
 const SignUp = () => {
 
-    const [name, setName] = useState({});
-    const [email, setEmail] = useState({});
-    const [password, setPassword] = useState({});
-    const [confirmPassword, setConfirmPassword] = useState({});
+    const [nameErr, setNameErr] = useState('');
+    const [emailErr, setEmailErr] = useState('');
+    const [passwordErr, setPasswordErr] = useState('');
+    const [confirmPasswordErr, setConfirmPasswordErr] = useState('');
 
     const [
         createUserWithEmailAndPassword,
@@ -33,43 +33,51 @@ const SignUp = () => {
 
 
         // name validation
+        let name;
         if (nameInput === '') {
-            setName({ value: '', error: 'Name is required' });
+            setNameErr('Name is required');
         } else {
-            setName({ value: nameInput, error: '' });
+            setNameErr('');
+            name = nameInput;
         }
 
         // Email Validation
+        let email;
         if (emailInput === '') {
-            setEmail({ value: '', error: 'Email is required' })
+            setEmailErr('Email is required');
         } else if (/\S+@\S+\.\S+/.test(emailInput)) {
-            setEmail({ value: emailInput, error: '' })
+            setEmailErr('')
+            email = emailInput;
         } else {
-            setEmail({ value: '', error: 'Invalid Email' })
+            setEmailErr('Invalid Email');
         }
 
         // Password Validation
+        let password;
         if (passwordInput === '') {
-            setPassword({ value: '', error: 'Password is required' });
+            setPasswordErr('Password is required');
         } else if (/(?=.*?[0-9])/.test(passwordInput)) {
-            setPassword({ value: passwordInput, error: '' });
+            setPasswordErr('');
+            password = passwordInput;
         } else {
-            setPassword({ value: '', error: 'Invalid Password' });
+            setPasswordErr('Invalid Password');
         }
 
-        // Confirm Password Validation
+        //Confirm Password Validation
+        let confirmPassword;
         if (confirmPasswordInput === '') {
-            setConfirmPassword({ value: '', error: 'Confirm Password is required' });
+            setConfirmPasswordErr('Confirm Password is required');
         } else if (confirmPasswordInput === passwordInput) {
-            setConfirmPassword({ value: confirmPasswordInput, error: '' });
+            setConfirmPasswordErr('');
+            confirmPassword = confirmPasswordInput;
         } else {
-            setConfirmPassword({ value: '', error: 'Password didn\'t match' });
+            setConfirmPasswordErr('Password didn\'t match');
         }
 
 
         // Create User
-        if (name.value && email.value && password.value && confirmPassword.value) {
-            console.log(email.value, password.value);
+        if (name && email && password && confirmPassword) {
+            console.log(name, email, password, confirmPassword);
             createUserWithEmailAndPassword(email.value, password.value);
         }
 
@@ -97,22 +105,22 @@ const SignUp = () => {
                 <div className="mb-3">
                     <label className='form-label fs-5' htmlFor="name">Name</label>
                     <input className='form-control fs-5' type="text" name='name' />
-                    {name.error && <p className='text-danger mt-2'><AiOutlineExclamationCircle className='mb-1' /> {name.error}</p>}
+                    {nameErr && <p className='text-danger mt-2'><AiOutlineExclamationCircle className='mb-1' /> {nameErr}</p>}
                 </div>
                 <div className="mb-3">
                     <label className='form-label fs-5' htmlFor="email">Email</label>
                     <input className='form-control fs-5' type="email" name='email' />
-                    {email.error && <p className='text-danger mt-2'><AiOutlineExclamationCircle className='mb-1' /> {email.error}</p>}
+                    {emailErr && <p className='text-danger mt-2'><AiOutlineExclamationCircle className='mb-1' /> {emailErr}</p>}
                 </div>
                 <div className="mb-4">
                     <label className='form-label fs-5' htmlFor="password">Password</label>
                     <input className='form-control fs-5' type="password" name='password' />
-                    {password.error && <p className='text-danger mt-2'><AiOutlineExclamationCircle className='mb-1' /> {password.error}</p>}
+                    {passwordErr && <p className='text-danger mt-2'><AiOutlineExclamationCircle className='mb-1' /> {passwordErr}</p>}
                 </div>
                 <div className="mb-4">
                     <label className='form-label fs-5' htmlFor="confirmPassword">Confirm Password</label>
                     <input className='form-control fs-5' type="password" name='confirmPassword' />
-                    {confirmPassword.error && <p className='text-danger mt-2'><AiOutlineExclamationCircle className='mb-1' /> {confirmPassword.error}</p>}
+                    {confirmPasswordErr && <p className='text-danger mt-2'><AiOutlineExclamationCircle className='mb-1' /> {confirmPasswordErr}</p>}
                 </div>
                 <input className='btn btn-primary w-100 btn-lg fs-4' type="submit" value="Sign Up" />
             </form>
