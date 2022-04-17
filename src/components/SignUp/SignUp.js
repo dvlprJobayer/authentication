@@ -8,6 +8,7 @@ import auth from '../../firebase/firebase.init';
 import Loading from '../Loading/Loading';
 
 
+
 const SignUp = () => {
 
     const [nameErr, setNameErr] = useState('');
