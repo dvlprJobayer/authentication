@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate, useNavigationType, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const services = [
     { id: 1, title: 'Single Bedroom', img: 'https://images.unsplash.com/photo-1635315891380-f70330a5b41b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c2luZ2xlJTIwYmVkfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60', price: 100 },

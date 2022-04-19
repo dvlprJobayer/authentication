@@ -8,6 +8,7 @@ import Login from './components/Login/Login';
 import Package from './components/Package/Package';
 import RequireAuth from './components/RequireAuth/RequireAuth';
 import SignUp from './components/SignUp/SignUp';
+import TitleRouter from './components/TitleRouter/TitleRouter';
 
 function App() {
     return (
@@ -22,7 +23,7 @@ function App() {
                 } />
                 <Route path='/about' element={<About />} />
                 <Route path='/package/:id' element={<Package />} />
-                <Route path='/login' element={<Login />} />
+                <TitleRouter title="login" path="/login" element={<Login />} />
                 <Route path='/signup' element={<SignUp />} />
             </Routes>
         </div>
