@@ -1,24 +1,24 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import './Header.css';
+import { NavLink } from 'react-router-dom';
 import auth from '../../firebase/firebase.init';
 import { signOut } from 'firebase/auth';
+import './Header.css';
 
 const Header = () => {
 
-    const [user, loading, error] = useAuthState(auth);
+    const [user] = useAuthState(auth);
 
     return (
         <header>
-            <nav className='text-center mt-3'>
-                <Link to="/">Home</Link>
-                <Link to="/checkout">Checkout</Link>
-                <Link to="/about">About</Link>
+            <nav>
+                <NavLink to='/'>Home</NavLink>
+                <NavLink to='/blog'>Blog</NavLink>
+                <NavLink to='/about'>About</NavLink>
                 {
                     user ?
-                        <button onClick={() => signOut(auth)}>Sign Out</button> :
-                        <Link to="/login">Login</Link>
+                        <button onClick={() => signOut(auth)}>Sign out</button> :
+                        <NavLink to='/login'>Login</NavLink>
                 }
             </nav>
         </header>

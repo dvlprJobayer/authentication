@@ -1,0 +1,34 @@
+.review {
+    border: 1px solid lightgray;
+    padding: 20px;
+    min-height: 280px;
+    position: relative;
+}
+
+.review img {
+    height: 100px;
+    width: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.review h4 {
+    color: #83b735;
+    margin: 10px 0;
+}
+
+.review p {
+    font-size: 17px;
+}
+
+.rating small {
+    color: #83b735;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.rating {
+    position: absolute;
+    bottom: 0;
+    left: calc(50% - 20px);
+}

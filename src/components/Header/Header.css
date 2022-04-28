@@ -1,17 +1,27 @@
+header nav {
+    text-align: center;
+    margin: 8px;
+}
+
 header nav a,
 header nav button {
     text-decoration: none;
-    margin: 10px;
+    color: #83b735;
     font-size: 20px;
     font-weight: 600;
+    padding: 0 10px;
 }
 
 header nav button {
     border: none;
-    color: #0d6efd;
-    background-color: white;
+    background-color: #fff;
 }
 
-header nav a:hover {
-    color: black;
+header nav a:hover,
+header nav button:hover {
+    color: #000;
+}
+
+header nav a.active {
+    color: #000;
 }

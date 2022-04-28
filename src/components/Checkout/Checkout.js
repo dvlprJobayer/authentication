@@ -1,38 +1,56 @@
-import React, { useState } from 'react';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import toast from 'react-hot-toast';
+import { useParams } from 'react-router-dom';
+import auth from '../../firebase/firebase.init';
+
+const services = [
+    {
+        id: 0,
+        balance: 129,
+        name: "PORTRAIT"
+    },
+    {
+        id: 1,
+        balance: 329,
+        name: "GROUP SHOTS"
+    },
+    {
+        id: 2,
+        balance: 629,
+        name: "WEDDING"
+    }
+];
 
 const Checkout = () => {
 
-    const [payment, setPayment] = useState(false);
+    const { id } = useParams();
+
+    const service = services.find(service => service.id === Number(id));
+
+    const [user] = useAuthState(auth);
+
+    const handleCheckout = e => {
+        e.preventDefault();
+        toast.success('Thank you for the booking', { id: 'booking' })
+    }
 
     return (
-        <div className='card w-50 mx-auto mt-5 p-5 shadow'>
-            <h1 className='fw-normal text-center text-primary'>Pay for this Service</h1>
-            <form>
-                <div className="mb-3">
-                    <label className='form-label fs-5' htmlFor="name">Name</label>
-                    <input className='form-control fs-5' type="text" name='name' />
+        <div className='card mx-auto my-5 p-md-5 p-4 shadow form'>
+            <h1 className='fw-normal text-center mb-4'>Checkout</h1>
+            <form onSubmit={handleCheckout}>
+                <div className="mb-4">
+                    <label className='form-label fs-5' htmlFor="email">Email:</label>
+                    <input className='form-control fs-5' type="email" defaultValue={user && user.email} name='email' />
                 </div>
-                <div className="mb-3">
-                    <label className='form-label fs-5' htmlFor="email">Email</label>
-                    <input className='form-control fs-5' type="email" name='email' />
+                <div className="mb-4">
+                    <label className='form-label fs-5' htmlFor="price">Package:</label>
+                    <input readOnly value={service.name} className='form-control fs-5' type="text" name='package' />
                 </div>
-                {
-                    payment ?
-                        <div className="mb-4">
-                            <label className='form-label fs-5' htmlFor="Paypal">PayPal</label>
-                            <input className='form-control fs-5' type="text" name='Paypal' />
-                        </div> :
-                        <div className="mb-4">
-                            <label className='form-label fs-5' htmlFor="creditCard">Credit Card</label>
-                            <input className='form-control fs-5' type="text" name='creditCard' />
-                        </div>
-                }
-                <p className='text-primary'>Change payment method click the button below</p>
-                <div class="mb-4 form-check ps-0">
-                    <input onChange={e => setPayment(e.target.checked)} type="checkbox" className="form-check-input d-none" id="exampleCheck1" />
-                    <label className="form-check-label btn btn-primary" for="exampleCheck1">{payment ? 'PayPal' : 'Credit Card'}</label>
+                <div className="mb-4">
+                    <label className='form-label fs-5' htmlFor="price">Price:</label>
+                    <input readOnly value={service.balance} className='form-control fs-5' type="text" name='price' />
                 </div>
-                <input className='btn btn-primary w-100 btn-lg fs-4' type="submit" value="Confirm Payment" />
+                <input className='btn w-100 btn-lg fs-4' type="submit" value="Confirm" />
             </form>
         </div>
     );

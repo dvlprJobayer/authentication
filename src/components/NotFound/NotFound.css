@@ -1,0 +1,24 @@
+.not-found {
+    height: calc(100vh - 120px);
+}
+
+.borderRight {
+    border-right: 4px solid #83b735;
+}
+
+.not-found h1 {
+    padding: 0 10px;
+    line-height: 55px;
+}
+
+.not-found button:hover {
+    border: 1px solid #83b735;
+    background-color: #fff;
+    color: #83b735;
+}
+
+.not-found button {
+    border: 1px solid #83b735;
+    background-color: #83b735;
+    color: #fff;
+}

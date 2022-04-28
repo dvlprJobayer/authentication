@@ -1,16 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSendPasswordResetEmail, useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { FcGoogle } from "react-icons/fc";
-import { FaTwitter } from "react-icons/fa";
-import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
-import auth from '../../firebase/firebase.init';
-import Loading from '../Loading/Loading';
 import { AiOutlineExclamationCircle } from "react-icons/ai";
+import auth from '../../firebase/firebase.init';
+import SocialLogin from '../SocialLogin/SocialLogin';
+import './Login.css';
+import Loading from '../Loading/Loading';
+import toast from 'react-hot-toast';
 
 const Login = () => {
 
-    const [emailError, setEmailError] = useState();
-    const [passwordError, setPasswordError] = useState();
+    const [userInfo, setUserInfo] = useState({
+        email: '',
+        password: ''
+    });
+    const [userError, setUserError] = useState({
+        email: '',
+        password: ''
+    });
 
     const [
         signInWithEmailAndPassword,
@@ -19,65 +26,83 @@ const Login = () => {
         error,
     ] = useSignInWithEmailAndPassword(auth);
 
-    const handleSignIn = event => {
-        event.preventDefault();
+    const [sendPasswordResetEmail, sending] = useSendPasswordResetEmail(auth);
 
-        const email = event.target.email.value;
-        const password = event.target.password.value;
-
-        if (!email) {
-            setEmailError('Please Put a Email');
+    const emailOnChange = e => {
+        const emailInput = e.target.value;
+        if (emailInput === '') {
+            setUserError({ ...userError, email: 'Email is required' });
+            setUserInfo({ ...userInfo, email: '' });
+        } else if (/\S+@\S+\.\S+/.test(emailInput)) {
+            setUserError({ ...userError, email: '' });
+            setUserInfo({ ...userInfo, email: emailInput });
+        } else {
+            setUserError({ ...userError, email: 'Invalid Email' });
+            setUserInfo({ ...userInfo, email: '' });
         }
-        if (!password) {
-            setPasswordError('Please Put a password');
-        }
-        if (!email || !password) {
-            return;
-        }
-
-        signInWithEmailAndPassword(email, password);
-
     }
 
-    const location = useLocation();
+    const passwordOnChange = e => {
+        const passwordInput = e.target.value;
+        if (passwordInput === '') {
+            setUserError({ ...userError, password: 'Password is required' });
+            setUserInfo({ ...userInfo, password: '' });
+        } else if (/(?=.*?[0-9])/.test(passwordInput)) {
+            setUserError({ ...userError, password: '' });
+            setUserInfo({ ...userInfo, password: passwordInput });
+        } else {
+            setUserError({ ...userError, password: 'Invalid Password' });
+            setUserInfo({ ...userInfo, password: '' });
+        }
+    }
+
+    const handleLogin = e => {
+        e.preventDefault();
+
+        if (userInfo.email && userInfo.password) {
+            signInWithEmailAndPassword(userInfo.email, userInfo.password);
+        }
+    }
+
+    const resetPassword = async () => {
+        if (userInfo.email) {
+            await sendPasswordResetEmail(userInfo.email);
+            toast.success('Sent password on your email', { id: 'reset' });
+        }
+    }
 
     const navigate = useNavigate();
+    const location = useLocation();
 
     const from = location.state?.from?.pathname || "/";
 
-    if (loading) {
-        <Loading />
-    }
-
-    if (user) {
-        navigate(from, { replace: true });
-    }
+    useEffect(() => {
+        if (loading || sending) {
+            <Loading />
+        }
+        if (user) {
+            navigate(from, { replace: true });
+        }
+    }, [user, loading, from, navigate, sending]);
 
     return (
-        <div className='card w-50 mx-auto mt-5 p-5 shadow'>
-            <h1 className='fw-normal text-center text-primary'>Login</h1>
-            <form onSubmit={handleSignIn}>
-                <div className="mb-3">
-                    <label className='form-label fs-5' htmlFor="email">Email</label>
-                    <input className='form-control fs-5' type="email" name='email' />
-                    {emailError && <p className='text-danger mt-2'><AiOutlineExclamationCircle className='mb-1' /> {emailError}</p>}
+        <div className='card mx-auto my-5 p-md-5 p-4 shadow form'>
+            <h1 className='fw-normal text-center mb-4'>Login</h1>
+            <form onSubmit={handleLogin}>
+                <div className="mb-4">
+                    <input onChange={emailOnChange} className='form-control fs-5' placeholder='Your Email' type="email" name='email' />
+                    {userError.email && <p className='text-danger mt-2'><AiOutlineExclamationCircle className='mb-1' /> {userError.email}</p>}
                 </div>
                 <div className="mb-4">
-                    <label className='form-label fs-5' htmlFor="password">Password</label>
-                    <input className='form-control fs-5' type="password" name='password' />
-                    {passwordError && <p className='text-danger mt-2'><AiOutlineExclamationCircle className='mb-1' /> {passwordError}</p>}
+                    <input onChange={passwordOnChange} className='form-control fs-5' placeholder='Your Password' type="password" name='password' />
+                    {userError.password && <p className='text-danger mt-2'><AiOutlineExclamationCircle className='mb-1' /> {userError.password}</p>}
                 </div>
-                <input className='btn btn-primary w-100 btn-lg fs-4' type="submit" value="Login" />
+                <input className='btn w-100 btn-lg fs-4' type="submit" value="Login" />
             </form>
             {error && <p className='text-danger mb-0 mt-3'>{error.message}</p>}
-            <p className='mt-2 fs-5 fw-light text-center mb-3'>New to Hotel Booms? <Link to='/signup'>Create New Account</Link></p>
-            <div className='d-flex align-items-center justify-content-center mb-3'>
-                <div className='bg-primary' style={{ height: '1px', width: '150px' }}></div>
-                <div className='text-primary mx-2 mb-1'>or</div>
-                <div className='bg-primary' style={{ height: '1px', width: '150px' }}></div>
-            </div>
-            <button className='btn btn-outline-primary btn-lg w-100 fs-4 mb-4 d-flex align-items-center justify-content-center'><FcGoogle /> <p style={{ width: '95%' }} className='mb-1'>Continue with Google</p></button>
-            <button className='btn btn-outline-primary btn-lg w-100 fs-4 d-flex align-items-center justify-content-center'><FaTwitter /> <p style={{ width: '95%' }} className='mb-1'>Continue with Twitter</p></button>
+            <p className='my-2 fs-5 fw-light text-center'>New to Jacob Billy? <Link style={{ color: '#83b735' }} to='/signup'>Create New Account</Link></p>
+            <p className='my-2 fs-5 fw-light text-center'>Forget Password? <span onClick={resetPassword} style={{ color: '#83b735', cursor: 'pointer', textDecoration: 'underline' }} >Reset Password</span></p>
+            <SocialLogin />
         </div>
     );
 };

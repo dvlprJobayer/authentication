@@ -1,0 +1,30 @@
+.service img {
+    height: 300px;
+    width: 320px;
+    object-fit: cover;
+}
+
+.service h4 {
+    color: #83b735;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.service span {
+    color: #83b735;
+}
+
+.service-des p {
+    margin: 5px 0;
+}
+
+.service .btn {
+    border: 1px solid #83b735;
+    color: #83b735;
+}
+
+.service .btn:hover {
+    border: 1px solid #83b735;
+    background-color: #83b735;
+    color: #fff;
+}

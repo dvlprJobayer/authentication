@@ -1,138 +1,116 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { FcGoogle } from "react-icons/fc";
-import { FaTwitter } from "react-icons/fa";
-import { AiOutlineExclamationCircle } from "react-icons/ai";
-import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import auth from '../../firebase/firebase.init';
+import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { AiOutlineExclamationCircle } from "react-icons/ai";
+import SocialLogin from '../SocialLogin/SocialLogin';
 import Loading from '../Loading/Loading';
-
-
 
 const SignUp = () => {
 
-    const [nameErr, setNameErr] = useState('');
-    const [emailErr, setEmailErr] = useState('');
-    const [passwordErr, setPasswordErr] = useState('');
-    const [confirmPasswordErr, setConfirmPasswordErr] = useState('');
+    const [userInfo, setUserInfo] = useState({
+        email: '',
+        password: '',
+        confirmPassword: ''
+    });
+    const [userError, setUserError] = useState({
+        email: '',
+        password: '',
+        confirmPassword: ''
+    });
 
     const [
         createUserWithEmailAndPassword,
         user,
         loading,
         error,
-    ] = useCreateUserWithEmailAndPassword(auth);
+    ] = useCreateUserWithEmailAndPassword(auth, { sendEmailVerification: true });
 
-
-    const handleRegister = event => {
-        event.preventDefault();
-
-        const nameInput = event.target.name.value;
-        const emailInput = event.target.email.value;
-        const passwordInput = event.target.password.value;
-        const confirmPasswordInput = event.target.confirmPassword.value;
-
-
-        // name validation
-        let name;
-        if (nameInput === '') {
-            setNameErr('Name is required');
-        } else {
-            setNameErr('');
-            name = nameInput;
-        }
-
-        // Email Validation
-        let email;
+    const emailOnChange = e => {
+        const emailInput = e.target.value;
         if (emailInput === '') {
-            setEmailErr('Email is required');
+            setUserError({ ...userError, email: 'Email is required' });
+            setUserInfo({ ...userInfo, email: '' });
         } else if (/\S+@\S+\.\S+/.test(emailInput)) {
-            setEmailErr('')
-            email = emailInput;
+            setUserError({ ...userError, email: '' });
+            setUserInfo({ ...userInfo, email: emailInput });
         } else {
-            setEmailErr('Invalid Email');
+            setUserError({ ...userError, email: 'Invalid Email' });
+            setUserInfo({ ...userInfo, email: '' });
         }
+    }
 
-        // Password Validation
-        let password;
+    const passwordOnChange = e => {
+        const passwordInput = e.target.value;
         if (passwordInput === '') {
-            setPasswordErr('Password is required');
+            setUserError({ ...userError, password: 'Password is required' });
+            setUserInfo({ ...userInfo, password: '' });
         } else if (/(?=.*?[0-9])/.test(passwordInput)) {
-            setPasswordErr('');
-            password = passwordInput;
+            setUserError({ ...userError, password: '' });
+            setUserInfo({ ...userInfo, password: passwordInput });
         } else {
-            setPasswordErr('Invalid Password');
+            setUserError({ ...userError, password: 'Invalid Password' });
+            setUserInfo({ ...userInfo, password: '' });
         }
+    }
 
-        //Confirm Password Validation
-        let confirmPassword;
+    const confirmPassOnChange = e => {
+        const confirmPasswordInput = e.target.value;
         if (confirmPasswordInput === '') {
-            setConfirmPasswordErr('Confirm Password is required');
-        } else if (confirmPasswordInput === passwordInput) {
-            setConfirmPasswordErr('');
-            confirmPassword = confirmPasswordInput;
+            setUserError({ ...userError, confirmPassword: 'Confirm Password is required' });
+            setUserInfo({ ...userInfo, confirmPassword: '' });
+        } else if (confirmPasswordInput === userInfo.password) {
+            setUserError({ ...userError, confirmPassword: '' });
+            setUserInfo({ ...userInfo, confirmPassword: confirmPasswordInput });
         } else {
-            setConfirmPasswordErr('Password didn\'t match');
+            setUserError({ ...userError, confirmPassword: 'Password didn\'t match' });
+            setUserInfo({ ...userInfo, confirmPassword: '' });
         }
+    }
 
+    const handleRegister = e => {
+        e.preventDefault();
 
-        // Create User
-        if (name && email && password && confirmPassword) {
-            createUserWithEmailAndPassword(email, password);
+        if (userInfo.email && userInfo.password && userInfo.confirmPassword) {
+            createUserWithEmailAndPassword(userInfo.email, userInfo.password);
         }
-
     }
 
     const navigate = useNavigate();
-
     const location = useLocation();
 
     const from = location.state?.from?.pathname || "/";
 
-
-    if (loading) {
-        <Loading />
-    }
-
-    if (user) {
-        navigate(from, { replace: true });
-    }
+    useEffect(() => {
+        if (loading) {
+            <Loading />
+        }
+        if (user) {
+            navigate(from, { replace: true });
+        }
+    }, [user, loading, from, navigate]);
 
     return (
-        <div className='card w-50 mx-auto mt-5 p-5 shadow'>
-            <h1 className='fw-normal text-center text-primary'>Sign Up</h1>
+        <div className='card mx-auto my-5 p-md-5 p-4 shadow form'>
+            <h1 className='fw-normal text-center mb-4'>Sign up</h1>
             <form onSubmit={handleRegister}>
-                <div className="mb-3">
-                    <label className='form-label fs-5' htmlFor="name">Name</label>
-                    <input className='form-control fs-5' type="text" name='name' />
-                    {nameErr && <p className='text-danger mt-2'><AiOutlineExclamationCircle className='mb-1' /> {nameErr}</p>}
-                </div>
-                <div className="mb-3">
-                    <label className='form-label fs-5' htmlFor="email">Email</label>
-                    <input className='form-control fs-5' type="email" name='email' />
-                    {emailErr && <p className='text-danger mt-2'><AiOutlineExclamationCircle className='mb-1' /> {emailErr}</p>}
+                <div className="mb-4">
+                    <input onChange={emailOnChange} className='form-control fs-5' placeholder='Your Email' type="email" name='email' />
+                    {userError.email && <p className='text-danger mt-2'><AiOutlineExclamationCircle className='mb-1' /> {userError.email}</p>}
                 </div>
                 <div className="mb-4">
-                    <label className='form-label fs-5' htmlFor="password">Password</label>
-                    <input className='form-control fs-5' type="password" name='password' />
-                    {passwordErr && <p className='text-danger mt-2'><AiOutlineExclamationCircle className='mb-1' /> {passwordErr}</p>}
+                    <input onChange={passwordOnChange} className='form-control fs-5' placeholder='Your Password' type="password" name='password' />
+                    {userError.password && <p className='text-danger mt-2'><AiOutlineExclamationCircle className='mb-1' /> {userError.password}</p>}
                 </div>
                 <div className="mb-4">
-                    <label className='form-label fs-5' htmlFor="confirmPassword">Confirm Password</label>
-                    <input className='form-control fs-5' type="password" name='confirmPassword' />
-                    {confirmPasswordErr && <p className='text-danger mt-2'><AiOutlineExclamationCircle className='mb-1' /> {confirmPasswordErr}</p>}
+                    <input onChange={confirmPassOnChange} className='form-control fs-5' placeholder='Confirm Password' type="password" name='confirmPassword' />
+                    {userError.confirmPassword && <p className='text-danger mt-2'><AiOutlineExclamationCircle className='mb-1' /> {userError.confirmPassword}</p>}
                 </div>
-                <input className='btn btn-primary w-100 btn-lg fs-4' type="submit" value="Sign Up" />
+                <input className='btn w-100 btn-lg fs-4' type="submit" value="Sign up" />
             </form>
             {error && <p className='text-danger mb-0 mt-3'>{error.message}</p>}
-            <p className='mt-2 fs-5 fw-light text-center'>Already have an account? <Link to='/login'>Login</Link></p>
-            <div className='d-flex align-items-center justify-content-center mb-3'>
-                <div className='bg-primary' style={{ height: '1px', width: '150px' }}></div>
-                <div className='text-primary mx-2 mb-1'>or</div>
-                <div className='bg-primary' style={{ height: '1px', width: '150px' }}></div>
-            </div>
-            <button className='btn btn-outline-primary btn-lg w-100 fs-4 mb-4 d-flex align-items-center justify-content-center'><FcGoogle /> <p style={{ width: '95%' }} className='mb-1'>Continue with Google</p></button>
-            <button className='btn btn-outline-primary btn-lg w-100 fs-4 d-flex align-items-center justify-content-center'><FaTwitter /> <p style={{ width: '95%' }} className='mb-1'>Continue with Twitter</p></button>
+            <p className='my-2 fs-5 fw-light text-center'>Already have an account? <Link style={{ color: '#83b735' }} to='/login'>Login</Link></p>
+            <SocialLogin />
         </div>
     );
 };

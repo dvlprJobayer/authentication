@@ -1,0 +1,44 @@
+.form h1 {
+    color: #83b735;
+}
+
+.form {
+    width: 40%;
+}
+
+.form .btn {
+    background-color: #83b735;
+    color: white;
+}
+
+.social .btn {
+    border: 1px solid #83b735;
+    background-color: #fff;
+    color: #83b735;
+}
+
+.social .btn:hover {
+    border: 1px solid #83b735;
+    background-color: #83b735;
+    color: #fff;
+}
+
+.social .or {
+    background-color: #83b735;
+}
+
+.social .or-text {
+    color: #83b735;
+}
+
+@media screen and (max-width: 768px) {
+    .form {
+        width: 70%;
+    }
+}
+
+@media screen and (max-width: 575px) {
+    .form {
+        width: 90%;
+    }
+}

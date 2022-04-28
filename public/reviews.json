@@ -1,0 +1,23 @@
+[
+    {
+        "id": "624a8c24b4ce8757c566f10f",
+        "rating": 5,
+        "picture": "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8bWFufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+        "name": "- Everett Strickland",
+        "review": "He is good. I don't really know him. He looks nice."
+    },
+    {
+        "id": "624a8c243cccdc04546d8c62",
+        "rating": 4.5,
+        "picture": "https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8bWFufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+        "name": "- Eliza William",
+        "review": "I would like to personally thank you for your outstanding work."
+    },
+    {
+        "id": "624a8c24391458eabcf61844",
+        "rating": 5,
+        "picture": "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8N3x8bWFufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+        "name": "- Alvarez Nixon",
+        "review": "He is a great and hardworking guy. I am so proud of I have him"
+    }
+]
